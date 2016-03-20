@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Information ArchiTECH, LLC
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to contact@informationarchitech.com so we can send you a copy immediately.
+ *
+ *
+ * @copyright  Copyright (c) 2013 Information ArchiTECH, LLC (http://www.informationarchitech.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     Information ArchiTECH <contact@informationarchitech.com>
+ */
+ -->
+<config>
+    <modules>
+        <Ia_TaxCloud>
+            <version>1.3.3</version>
+        </Ia_TaxCloud>
+    </modules>
+    <global>
+        <helpers>
+            <iataxcloud>
+                <class>Ia_TaxCloud_Helper</class>
+            </iataxcloud>
+        </helpers>     
+        <models>
+            <iataxcloud>
+                <class>Ia_TaxCloud_Model</class>
+            </iataxcloud>
+        	<tax>
+        		<rewrite>
+                    <calculation>Ia_TaxCloud_Model_Calculation</calculation>
+                </rewrite>
+            </tax>
+            <tax_resource>
+                <rewrite>
+                    <calculation>Ia_TaxCloud_Model_Resource_Calculation</calculation>
+                </rewrite>
+            </tax_resource>            
+        </models>
+        <events>
+            <sales_order_place_after>
+                <observers>
+                    <tax_authorize_capture>
+                        <type>singleton</type>
+                        <class>Ia_TaxCloud_Model_Observer</class>
+                        <method>authorizeCapture</method>
+                    </tax_authorize_capture>
+                </observers>        
+            </sales_order_place_after>
+            <sales_order_creditmemo_refund>
+                <observers>
+                    <sales_order_creditmemo_refund_handler>
+                        <type>singleton</type>
+                        <class>Ia_TaxCloud_Model_Observer</class>
+                        <method>returnItems</method>
+                    </sales_order_creditmemo_refund_handler>
+                </observers>
+            </sales_order_creditmemo_refund>            
+            
+            
+        </events>
+        <resources>
+            <iataxcloud_setup>
+                <setup>
+                    <module>Ia_TaxCloud</module>
+                    <class>Ia_TaxCloud_Model_Resource_Eav_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </iataxcloud_setup>
+            <iataxcloud_write>
+                <connection>
+                <use>core_write</use>
+                </connection>
+            </iataxcloud_write>
+            <iataxcloud_read>
+                <connection>
+                <use>core_read</use>
+                </connection>
+            </iataxcloud_read>
+        </resources>
+    </global>
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <iataxcloud>
+                                    <title>TaxCloud</title>
+                                    <sort_order>10</sort_order>
+                                </iataxcloud>                            
+                                <config>
+                                    <children>
+                                        <iataxcloud_options>
+                                            <title>TaxCloud</title>
+                                        </iataxcloud_options>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>    
+    <default>
+        <iataxcloud_options>
+            <configuration>
+                <enabled>1</enabled>
+                <development>0</development>
+                <debug>0</debug>
+                <logging>0</logging>
+                <apiId></apiId>
+                <apiKey></apiKey>
+                <uspsId></uspsId>
+                <guestCustomerId>-1</guestCustomerId>
+                <originAddress1></originAddress1>
+                <originAddress2></originAddress2>
+                <originCity></originCity>
+                <originState></originState>
+                <originZip></originZip>
+                <defaultTic>00000</defaultTic>
+                <shippingTic>11010</shippingTic>
+            </configuration>
+        </iataxcloud_options>
+    </default>
+</config>
